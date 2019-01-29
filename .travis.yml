@@ -21,5 +21,18 @@ after_success:
  - docker push ramkunag/multi-nginx
  - docker push ramkunag/multi-server
  - docker push ramkunag/multi-worker
-#pushin to docker hub
 
+#deploy to EBS
+
+deploy:
+ provider: elasticbeanstalk
+ region: us-east-2
+ app: multi-docker
+ env: MultiDocker-env
+ bucketname: elasticbeanstalk-us-east-2-040201380789
+ bucketpath: docker-multi
+ on:
+  branch: master
+ access_key_id: $AWS_ACCESS_KEY
+ secret_access_key:
+  secure: $AWS_SCRET_KEY 	
