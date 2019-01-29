@@ -1,0 +1,25 @@
+sudo: required
+services: 
+ - docker
+
+before_install:
+ - docker build -t ramkunag/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+ - docker run ramkunag/react-test npm test -- --coverage
+ 
+after_success:
+ - docker build -t ramkunag/multi-client ./client
+ - docker build -t ramkunag/multi-nginx ./nginx
+ - docker build -t ramkunag/multi-server ./server
+ - docker build -t ramkunag/multi-worker ./worker
+
+#login docker cli
+
+ - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+ - docker push ramkunag/multi-client
+ - docker push ramkunag/multi-nginx
+ - docker push ramkunag/multi-server
+ - docker push ramkunag/multi-worker
+#pushin to docker hub
+
